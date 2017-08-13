@@ -254,6 +254,14 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 }
 
 //-----------------------------------------------------------------------------
+// error logging with go on
+#define IF_ERROR_GO_ON(name, errcode, message) { \
+    if (errcode != LOG_SUCCESS) { \
+        LOG_ERROR(name, errcode, message); \
+    } \
+}
+
+//-----------------------------------------------------------------------------
 // error logging method with break
 #define IF_METHOD_ERROR_BREAK(name, errcode, method) { \
     errcode = method; \
@@ -280,6 +288,15 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
     if (errcode != LOG_SUCCESS) { \
         LOG_ERROR(name, errcode, METHOD_ERROR #method); \
         return errcode; \
+    } \
+}
+
+//-----------------------------------------------------------------------------
+// error logging method with go on
+#define IF_METHOD_ERROR_GO_ON(name, errcode, method) { \
+    errcode = method; \
+    if (errcode != LOG_SUCCESS) { \
+        LOG_ERROR(name, errcode, METHOD_ERROR #method); \
     } \
 }
 
@@ -337,6 +354,14 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
     if (errcode != LOG_SUCCESS) { \
         LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
         return errcode; \
+    } \
+}
+
+//-----------------------------------------------------------------------------
+// error logging with go on
+#define IF_ERROR_GO_ON_VAR(name, errcode, message, ...) { \
+    if (errcode != LOG_SUCCESS) { \
+        LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
     } \
 }
 

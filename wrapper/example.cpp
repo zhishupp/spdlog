@@ -5,6 +5,66 @@
 #include <chrono>
 
 //-----------------------------------------------------------------------------
+int func(int errcode)
+{
+    return errcode;
+}
+
+//-----------------------------------------------------------------------------
+int test_if_error()
+{
+    for (int i = 0; i < 2; ++i)
+    {
+        IF_ERROR_BREAK("console", i, "test_if_error");
+    }
+
+    for (int i = 0; i < 2; ++i)
+    {
+        IF_ERROR_CONTINUE("console", i, "test_if_error");
+    }
+
+    for (int i = 0; i < 2; ++i)
+    {
+        IF_ERROR_GO_ON("console", i, "test_if_error");
+    }
+
+    for (int i = 0; i < 2; ++i)
+    {
+        IF_ERROR_RETURN("console", i, "test_if_error");
+    }
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------------
+int test_if_method_error()
+{
+    int e = 0;
+
+    for (int i = 0; i < 2; ++i)
+    {
+        IF_METHOD_ERROR_BREAK("console", e, func(i));
+    }
+
+    for (int i = 0; i < 2; ++i)
+    {
+        IF_METHOD_ERROR_CONTINUE("console", e, func(i));
+    }
+
+    for (int i = 0; i < 2; ++i)
+    {
+        IF_METHOD_ERROR_GO_ON("console", e, func(i));
+    }
+
+    for (int i = 0; i < 2; ++i)
+    {
+        IF_METHOD_ERROR_RETURN("console", e, func(i));
+    }
+
+    return 0;
+}
+
+//-----------------------------------------------------------------------------
 void worker()
 {
     TRACE_FUNCTION("console");
@@ -51,6 +111,9 @@ int main(int argc, char* argv[])
 
     //auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     //std::cout << duration.count() << std::endl;
+
+    test_if_error();
+    test_if_method_error();
 
     LOG_INFO("console", "main thread end");
 
