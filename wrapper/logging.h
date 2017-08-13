@@ -1,7 +1,8 @@
 //
-// Copyright(c) 2017 zhishupp.
+// Copyright(c) 2015 Gabi Melman.
 // Distributed under the MIT License (http://opensource.org/licenses/MIT)
 //
+// Copyright(c) 2017 zhishupp.
 // <spdlog> C wrapper for support: __FUNCTION__,  __FILE__, __LINE__
 //-----------------------------------------------------------------------------
 #ifndef __LOGGING_H_
