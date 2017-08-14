@@ -227,7 +227,11 @@ void spdlog_logger_log(const char* logger_name, int log_level, const char* msg)
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
     if (logger_ptr != nullptr)
     {
-        logger_ptr->log(static_cast<spdlog::level::level_enum>(log_level), msg);
+        std::string str_msg = msg;
+#ifdef UNBRACE_MSG
+        str_msg = unbrace(str_msg);
+#endif
+        logger_ptr->log(static_cast<spdlog::level::level_enum>(log_level), str_msg);
     }
 }
 
@@ -243,8 +247,12 @@ void spdlog_logger_log_var(const char* logger_name, int log_level, const char* f
         va_start(args, fmt);
         vsnprintf(msg, sizeof(msg), fmt, args);
         va_end(args);
-
-        logger_ptr->log(static_cast<spdlog::level::level_enum>(log_level), msg);
+        
+        std::string str_msg = msg;
+#ifdef UNBRACE_MSG
+        str_msg = unbrace(str_msg);
+#endif
+        logger_ptr->log(static_cast<spdlog::level::level_enum>(log_level), str_msg);
     }
 }
 
