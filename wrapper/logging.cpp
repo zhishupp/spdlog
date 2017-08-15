@@ -124,7 +124,6 @@ void spdlog_stderr_logger_st(const char* logger_name)
     spdlog::stderr_logger_st(logger_name);
 }
 
-
 //-----------------------------------------------------------------------------
 void spdlog_stdout_color_mt(const char* logger_name)
 {
@@ -249,7 +248,7 @@ void spdlog_logger_log_var(const char* logger_name, int log_level, const char* f
         va_start(args, fmt);
         vsnprintf(msg, sizeof(msg), fmt, args);
         va_end(args);
-        
+
 #ifdef UNBRACE_MSG
         std::string str_msg = msg;
         str_msg = unbrace(str_msg);
