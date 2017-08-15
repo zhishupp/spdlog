@@ -152,7 +152,7 @@ void spdlog_stderr_color_st(const char* logger_name)
 //-----------------------------------------------------------------------------
 void spdlog_syslog_logger(const char* logger_name, const char* ident, int syslog_option)
 {
-#if SPDLOG_ENABLE_SYSLOG
+#ifdef SPDLOG_ENABLE_SYSLOG
     spdlog::syslog_logger(logger_name, ident, syslog_option);
 #endif
 }
@@ -227,11 +227,13 @@ void spdlog_logger_log(const char* logger_name, int log_level, const char* msg)
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
     if (logger_ptr != nullptr)
     {
-        std::string str_msg = msg;
 #ifdef UNBRACE_MSG
+        std::string str_msg = msg;
         str_msg = unbrace(str_msg);
-#endif
         logger_ptr->log(static_cast<spdlog::level::level_enum>(log_level), str_msg);
+#else
+        logger_ptr->log(static_cast<spdlog::level::level_enum>(log_level), msg);
+#endif
     }
 }
 
@@ -248,11 +250,13 @@ void spdlog_logger_log_var(const char* logger_name, int log_level, const char* f
         vsnprintf(msg, sizeof(msg), fmt, args);
         va_end(args);
         
-        std::string str_msg = msg;
 #ifdef UNBRACE_MSG
+        std::string str_msg = msg;
         str_msg = unbrace(str_msg);
-#endif
         logger_ptr->log(static_cast<spdlog::level::level_enum>(log_level), str_msg);
+#else
+        logger_ptr->log(static_cast<spdlog::level::level_enum>(log_level), msg);
+#endif
     }
 }
 

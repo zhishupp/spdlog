@@ -13,6 +13,7 @@
 #define __DLL_EXPORT_ __declspec(dllexport)
 #else
 #define __DLL_EXPORT_ __attribute__((visibility ("default")))
+#define SPDLOG_ENABLE_SYSLOG
 #endif
 
 //-----------------------------------------------------------------------------
@@ -78,7 +79,7 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_set_sync_mode();
 //-----------------------------------------------------------------------------
 //
 // Create and register multi/single threaded basic file logger.
-// Basic logger simply writes to given file without any limitatons or rotations.
+// Basic logger simply writes to given file without any limitations or rotations.
 //
 __EXTERN_C_ __DLL_EXPORT_ void spdlog_basic_logger_mt(const char* logger_name, const char* filename, int truncate);
 __EXTERN_C_ __DLL_EXPORT_ void spdlog_basic_logger_st(const char* logger_name, const char* filename, int truncate);
@@ -189,7 +190,7 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 
 //-----------------------------------------------------------------------------
 //
-// Logger macro
+// Basic logging macro with __FUNCTION__, __FILE__, __LINE__
 //
 //-----------------------------------------------------------------------------
 // trace function, for enter a function
@@ -198,39 +199,73 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 
 //-----------------------------------------------------------------------------
 // trace logging
-#define LOG_TRACE(name, message) \
+#define SPD_LOG_TRACE(name, message) \
     spdlog_logger_log_ffl(name, spdlog_trace, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message)
 
 //-----------------------------------------------------------------------------
 // debug logging
-#define LOG_DEBUG(name, message) \
+#define SPD_LOG_DEBUG(name, message) \
     spdlog_logger_log_ffl(name, spdlog_debug, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message)
 
 //-----------------------------------------------------------------------------
 // info logging
-#define LOG_INFO(name, message) \
+#define SPD_LOG_INFO(name, message) \
     spdlog_logger_log_ffl(name, spdlog_info, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message)
 
 //-----------------------------------------------------------------------------
 // warn logging
-#define LOG_WARN(name, message) \
+#define SPD_LOG_WARN(name, message) \
     spdlog_logger_log_ffl(name, spdlog_warn, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message)
 
 //-----------------------------------------------------------------------------
 // error logging
-#define LOG_ERROR(name, errcode, message) \
+#define SPD_LOG_ERROR(name, errcode, message) \
     spdlog_logger_log_ffl(name, spdlog_error, __FUNCTION__, __FILE__, __LINE__, errcode, message)
 
 //-----------------------------------------------------------------------------
 // critical logging
-#define LOG_CRITI(name, errcode, message) \
+#define SPD_LOG_CRITI(name, errcode, message) \
     spdlog_logger_log_ffl(name, spdlog_criti, __FUNCTION__, __FILE__, __LINE__, errcode, message)
 
+//-----------------------------------------------------------------------------
+// trace logging variadic
+#define SPD_LOG_TRACE_VAR(name, message, ...) \
+    spdlog_logger_log_ffl_var(name, spdlog_trace, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message, __VA_ARGS__)
+
+//-----------------------------------------------------------------------------
+// debug logging variadic
+#define SPD_LOG_DEBUG_VAR(name, message, ...) \
+    spdlog_logger_log_ffl_var(name, spdlog_debug, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message, __VA_ARGS__)
+
+//-----------------------------------------------------------------------------
+// info logging variadic
+#define SPD_LOG_INFO_VAR(name, message, ...) \
+    spdlog_logger_log_ffl_var(name, spdlog_info, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message, __VA_ARGS__)
+
+//-----------------------------------------------------------------------------
+// warn logging variadic
+#define SPD_LOG_WARN_VAR(name, message, ...) \
+    spdlog_logger_log_ffl_var(name, spdlog_warn, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message, __VA_ARGS__)
+
+//-----------------------------------------------------------------------------
+// error logging variadic
+#define SPD_LOG_ERROR_VAR(name, errcode, message, ...) \
+    spdlog_logger_log_ffl_var(name, spdlog_error, __FUNCTION__, __FILE__, __LINE__, errcode, message, __VA_ARGS__)
+
+//-----------------------------------------------------------------------------
+// critical logging variadic
+#define SPD_LOG_CRITI_VAR(name, errcode, message, ...) \
+    spdlog_logger_log_ffl_var(name, spdlog_criti, __FUNCTION__, __FILE__, __LINE__, errcode, message, __VA_ARGS__)
+
+//-----------------------------------------------------------------------------
+//
+// Extended logging macro
+//
 //-----------------------------------------------------------------------------
 // error logging with break
 #define IF_ERROR_BREAK(name, errcode, message) { \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR(name, errcode, message); \
+        SPD_LOG_ERROR(name, errcode, message); \
         break; \
     } \
 }
@@ -239,7 +274,7 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 // error logging with continue
 #define IF_ERROR_CONTINUE(name, errcode, message) { \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR(name, errcode, message); \
+        SPD_LOG_ERROR(name, errcode, message); \
         continue; \
     } \
 }
@@ -248,7 +283,7 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 // error logging with return
 #define IF_ERROR_RETURN(name, errcode, message) { \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR(name, errcode, message); \
+        SPD_LOG_ERROR(name, errcode, message); \
         return errcode; \
     } \
 }
@@ -257,7 +292,7 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 // error logging with go on
 #define IF_ERROR_GO_ON(name, errcode, message) { \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR(name, errcode, message); \
+        SPD_LOG_ERROR(name, errcode, message); \
     } \
 }
 
@@ -266,7 +301,7 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 #define IF_METHOD_ERROR_BREAK(name, errcode, method) { \
     errcode = method; \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR(name, errcode, METHOD_ERROR #method); \
+        SPD_LOG_ERROR(name, errcode, METHOD_ERROR #method); \
         break; \
     } \
 }
@@ -276,7 +311,7 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 #define IF_METHOD_ERROR_CONTINUE(name, errcode, method) { \
     errcode = method; \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR(name, errcode, METHOD_ERROR #method); \
+        SPD_LOG_ERROR(name, errcode, METHOD_ERROR #method); \
         continue; \
     } \
 }
@@ -286,7 +321,7 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 #define IF_METHOD_ERROR_RETURN(name, errcode, method) { \
     errcode = method; \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR(name, errcode, METHOD_ERROR #method); \
+        SPD_LOG_ERROR(name, errcode, METHOD_ERROR #method); \
         return errcode; \
     } \
 }
@@ -296,72 +331,42 @@ __EXTERN_C_ __DLL_EXPORT_ void spdlog_logger_log_ffl_var(const char* logger_name
 #define IF_METHOD_ERROR_GO_ON(name, errcode, method) { \
     errcode = method; \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR(name, errcode, METHOD_ERROR #method); \
+        SPD_LOG_ERROR(name, errcode, METHOD_ERROR #method); \
     } \
 }
 
 //-----------------------------------------------------------------------------
-// trace logging variadic
-#define LOG_TRACE_VAR(name, message, ...) \
-    spdlog_logger_log_ffl_var(name, spdlog_trace, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message, __VA_ARGS__)
-
-//-----------------------------------------------------------------------------
-// debug logging
-#define LOG_DEBUG_VAR(name, message, ...) \
-    spdlog_logger_log_ffl_var(name, spdlog_debug, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message, __VA_ARGS__)
-
-//-----------------------------------------------------------------------------
-// info logging
-#define LOG_INFO_VAR(name, message, ...) \
-    spdlog_logger_log_ffl_var(name, spdlog_info, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message, __VA_ARGS__)
-
-//-----------------------------------------------------------------------------
-// warn logging
-#define LOG_WARN_VAR(name, message, ...) \
-    spdlog_logger_log_ffl_var(name, spdlog_warn, __FUNCTION__, __FILE__, __LINE__, LOG_SUCCESS, message, __VA_ARGS__)
-
-//-----------------------------------------------------------------------------
-// error logging
-#define LOG_ERROR_VAR(name, errcode, message, ...) \
-    spdlog_logger_log_ffl_var(name, spdlog_error, __FUNCTION__, __FILE__, __LINE__, errcode, message, __VA_ARGS__)
-
-//-----------------------------------------------------------------------------
-// critical logging
-#define LOG_CRITI_VAR(name, errcode, message, ...) \
-    spdlog_logger_log_ffl_var(name, spdlog_criti, __FUNCTION__, __FILE__, __LINE__, errcode, message, __VA_ARGS__)
-
-//-----------------------------------------------------------------------------
-// error logging with break
+// error logging with break variadic
 #define IF_ERROR_BREAK_VAR(name, errcode, message, ...) { \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
+        SPD_LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
         break; \
     } \
 }
 
 //-----------------------------------------------------------------------------
-// error logging with continue
+// error logging with continue variadic
 #define IF_ERROR_CONTINUE_VAR(name, errcode, message, ...) { \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
+        SPD_LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
         continue; \
     } \
 }
 
 //-----------------------------------------------------------------------------
-// error logging with return
+// error logging with return variadic
 #define IF_ERROR_RETURN_VAR(name, errcode, message, ...) { \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
+        SPD_LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
         return errcode; \
     } \
 }
 
 //-----------------------------------------------------------------------------
-// error logging with go on
+// error logging with go on variadic
 #define IF_ERROR_GO_ON_VAR(name, errcode, message, ...) { \
     if (errcode != LOG_SUCCESS) { \
-        LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
+        SPD_LOG_ERROR_VAR(name, errcode, message, __VA_ARGS__); \
     } \
 }
 
