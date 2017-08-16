@@ -37,7 +37,7 @@ int spdlog_get(const char* logger_name)
 {
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
 
-    return (logger_ptr.get() != nullptr) ? 1 : 0;
+    return (logger_ptr != nullptr) ? 1 : 0;
 }
 
 //-----------------------------------------------------------------------------
