@@ -67,13 +67,13 @@ void spdlog_set_sync_mode()
 //-----------------------------------------------------------------------------
 void spdlog_basic_logger_mt(const char* logger_name, const char* filename, int truncate)
 {
-    spdlog::basic_logger_mt(logger_name, filename, static_cast<bool>(truncate));
+    spdlog::basic_logger_mt(logger_name, filename, (truncate == 0) ? false : true);
 }
 
 //-----------------------------------------------------------------------------
 void spdlog_basic_logger_st(const char* logger_name, const char* filename, int truncate)
 {
-    spdlog::basic_logger_st(logger_name, filename, static_cast<bool>(truncate));
+    spdlog::basic_logger_st(logger_name, filename, (truncate == 0) ? false : true);
 }
 
 //-----------------------------------------------------------------------------
