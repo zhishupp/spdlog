@@ -184,7 +184,7 @@ int spdlog_get_logger_level(const char* logger_name)
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
     if (logger_ptr != nullptr)
     {
-        return logger_ptr->level();
+        return static_cast<int>(logger_ptr->level());
     }
 
     return -1;
@@ -242,7 +242,7 @@ void spdlog_logger_log_var(const char* logger_name, int log_level, const char* f
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
     if (logger_ptr != nullptr)
     {
-        char msg[MSG_MAX_BUF_LEN];
+        char msg[MSG_BUF_MAX_LEN];
 
         va_list args;
         va_start(args, fmt);
@@ -281,7 +281,7 @@ void spdlog_logger_log_ffl_var(const char* logger_name, int log_level, const cha
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
     if (logger_ptr != nullptr)
     {
-        char msg[MSG_MAX_BUF_LEN];
+        char msg[MSG_BUF_MAX_LEN];
 
         va_list args;
         va_start(args, fmt);
