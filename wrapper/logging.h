@@ -27,7 +27,7 @@
 #include <stdio.h>
 
 //-----------------------------------------------------------------------------
-#define MSG_MAX_BUF_LEN     2048
+#define MSG_BUF_MAX_LEN     2048
 #define LOG_SUFFIX_STR      " [{}|{}:{}]"
 #define LOG_SUCCESS         0
 #define METHOD_ERROR        "Call function return error: "
