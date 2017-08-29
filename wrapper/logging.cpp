@@ -226,6 +226,8 @@ void spdlog_logger_log(const char* logger_name, int log_level, const char* msg)
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
     if (logger_ptr != nullptr)
     {
+        if (!logger_ptr->should_log(static_cast<spdlog::level::level_enum>(log_level))) return;
+        
 #ifdef UNBRACE_MSG
         std::string str_msg = msg;
         str_msg = unbrace(str_msg);
@@ -242,6 +244,8 @@ void spdlog_logger_log_var(const char* logger_name, int log_level, const char* f
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
     if (logger_ptr != nullptr)
     {
+        if (!logger_ptr->should_log(static_cast<spdlog::level::level_enum>(log_level))) return;
+        
         char msg[MSG_BUF_MAX_LEN];
 
         va_list args;
@@ -265,6 +269,8 @@ void spdlog_logger_log_ffl(const char* logger_name, int log_level, const char* f
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
     if (logger_ptr != nullptr)
     {
+        if (!logger_ptr->should_log(static_cast<spdlog::level::level_enum>(log_level))) return;
+        
         std::string str_msg = msg;
 #ifdef UNBRACE_MSG
         str_msg = unbrace(str_msg);
@@ -281,6 +287,8 @@ void spdlog_logger_log_ffl_var(const char* logger_name, int log_level, const cha
     std::shared_ptr<spdlog::logger> logger_ptr = spdlog::get(logger_name);
     if (logger_ptr != nullptr)
     {
+        if (!logger_ptr->should_log(static_cast<spdlog::level::level_enum>(log_level))) return;
+        
         char msg[MSG_BUF_MAX_LEN];
 
         va_list args;
